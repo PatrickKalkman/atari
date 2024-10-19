@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "atari"
+version = "0.1.0"
+description = ""
+authors = ["Patrick Kalkman <patrick@simpletechture.nl>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.10.12"
+stable-baselines3 = {version = ">=2.0.0a4", extras = ["extra"]}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
