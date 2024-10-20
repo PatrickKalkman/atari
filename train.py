@@ -2,7 +2,6 @@ import torch
 from stable_baselines3 import PPO
 from stable_baselines3.common.env_util import make_atari_env
 from stable_baselines3.common.vec_env import VecFrameStack, VecTransposeImage
-from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.callbacks import (
     EvalCallback,
     StopTrainingOnRewardThreshold,
@@ -30,7 +29,6 @@ env = VecTransposeImage(
 eval_env = make_atari_env("PongNoFrameskip-v4", n_envs=1, seed=42)
 eval_env = VecFrameStack(eval_env, n_stack=8)
 eval_env = VecTransposeImage(eval_env)  # Match the training environment's wrappers
-
 
 # Set the number of threads for PyTorch operations
 torch.set_num_threads(8)
@@ -67,7 +65,7 @@ eval_callback = EvalCallback(
     eval_env,
     best_model_save_path=best_model_save_path,
     log_path="./logs/",
-    eval_freq=9_984,  # Evaluate approximately every 10,000 steps
+    eval_freq=31250,
     n_eval_episodes=5,
     deterministic=True,
     render=False,
