@@ -19,14 +19,14 @@ device = torch.device(
 print("Device:", device)
 
 # Use more parallel environments for training
-env = make_atari_env("PongNoFrameskip-v4", n_envs=32, seed=0)
+env = make_atari_env("BreakoutNoFrameskip-v4", n_envs=64, seed=0)
 env = VecFrameStack(env, n_stack=8)
 env = VecTransposeImage(
     env
 )  # Ensure training env is wrapped properly for PyTorch compatibility
 
 # Create evaluation environment (single environment, same wrappers as training)
-eval_env = make_atari_env("PongNoFrameskip-v4", n_envs=1, seed=42)
+eval_env = make_atari_env("BreakoutNoFrameskip-v4", n_envs=1, seed=42)
 eval_env = VecFrameStack(eval_env, n_stack=8)
 eval_env = VecTransposeImage(eval_env)  # Match the training environment's wrappers
 
@@ -56,7 +56,7 @@ print(f"Best model directory exists: {os.path.exists(best_model_save_path)}")
 
 # Callback for saving the best model and early stopping
 stop_callback = StopTrainingOnRewardThreshold(
-    reward_threshold=20.0,  # Stop training once reward reaches a satisfactory level
+    reward_threshold=350.0,  # Stop training once reward reaches a satisfactory level
     verbose=1,
 )
 
@@ -65,7 +65,7 @@ eval_callback = EvalCallback(
     eval_env,
     best_model_save_path=best_model_save_path,
     log_path="./logs/",
-    eval_freq=31250,
+    eval_freq=3125,
     n_eval_episodes=5,
     deterministic=True,
     render=False,
@@ -79,7 +79,7 @@ callbacks = CallbackList([eval_callback])
 model.learn(total_timesteps=10_000_000, callback=callbacks, progress_bar=True)
 
 # Save the final model after training
-model.save("ppo_pong")
+model.save("ppo_breakout")
 
 # Track the training progress using TensorBoard
 # Run this command in a separate terminal to visualize: tensorboard --logdir=./tensorboard_logs/
